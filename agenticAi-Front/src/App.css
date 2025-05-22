@@ -1,43 +1,71 @@
+
 @import "tailwindcss";
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@plugin "daisyui";
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-in-out;
   }
-  to {
-    transform: rotate(360deg);
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+.chat-bubble {
+  position: relative;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  background-color: #2a2a3d;
+  color: #e5e7eb;
+  max-width: 100%;
+}
+
+.chat-bubble::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  left: -0.5rem;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent;
+  border-right-color: #2a2a3d;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid #6366f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.agent-active-indicator {
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  width: 8px;
+  height: 48px;
+  border-radius: 6px;
+  background: linear-gradient(to right, #60a5fa, #6366f1);
+  filter: blur(4px);
+  animation: pulseGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scaleY(1);
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  50% {
+    opacity: 1;
+    transform: scaleY(1.2);
+  }
 }

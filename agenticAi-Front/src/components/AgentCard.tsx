@@ -1,28 +1,30 @@
-import React from "react";
-import type {Agent} from "../types/Agent";
+interface AgentCardProps {
+    nombre: string;
+    imagen: string;
+    respuesta: string;
+    agenteAsignado: string;
+}
 
-type AgentCardProps = Agent
-
-const AgentCard: React.FC<AgentCardProps> = ({ nombre, imagen, respuesta }) => {
+const AgentCard = ({ nombre, imagen, respuesta, agenteAsignado }: AgentCardProps) => {
     return (
-        <div className="bg-base-200 rounded-xl shadow-lg p-4 flex gap-4 items-start">
+        <div className="relative flex items-start gap-4 bg-[#202030]/80 border border-[#2e2e40] rounded-xl shadow-lg p-6 w-full max-w-3xl">
+            {nombre === agenteAsignado && (
+                <div className="agent-active-indicator" />
+            )}
             <img
                 src={imagen}
                 alt={nombre}
-                className="w-16 h-16 rounded-full object-cover border border-base-300"
+                className="avatar-circle"
             />
-            <div className="flex flex-col">
-                <h2 className="font-bold text-lg mb-1">{nombre}</h2>
-                {respuesta ? (
-                    <div className="bg-base-100 rounded p-3 border border-base-300">
-                        <p className="whitespace-pre-wrap text-sm">{respuesta}</p>
-                    </div>
-                ) : (
-                    <p className="text-sm text-base-content/50 italic">Esperando respuesta...</p>
-                )}
+            <div className="flex flex-col justify-center">
+                <h3 className="text-xl font-bold text-white">{nombre}</h3>
+                <p className="text-sm text-gray-300 mt-1 leading-relaxed text-white">
+                    {respuesta || "Esperando una tarea..."}
+                </p>
             </div>
         </div>
     );
 };
+
 
 export default AgentCard;

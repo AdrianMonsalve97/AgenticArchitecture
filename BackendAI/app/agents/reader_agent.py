@@ -36,7 +36,7 @@ class ReaderAgent(BaseAgent):
                 temperature=0.2
             )
             resultado = respuesta.choices[0].message.content
-            print("📚 Respuesta Reader:", resultado)
+            print(" Respuesta Reader:", resultado)
             return "[ReaderAgent 📖] " + resultado
 
         except Exception as e:

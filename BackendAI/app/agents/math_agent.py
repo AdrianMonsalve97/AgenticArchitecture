@@ -2,38 +2,30 @@ from app.agents.base_agent import BaseAgent
 from app.config import OPENAI_API_KEY
 from openai import OpenAI
 
-# Crear el cliente moderno de OpenAI
+# Crear cliente de OpenAI
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 class MathAgent(BaseAgent):
     def __init__(self, name):
         super().__init__(name)
 
-    def can_handle(self, tarea):
+    def can_handle(self, tarea: str) -> bool:
         palabras_clave = ['deriva', 'integra', 'ecuación', 'resolver', '+', '-', '*', '/', '^']
         return any(p in tarea.lower() for p in palabras_clave)
 
-    def handle(self, tarea):
+    def handle(self, tarea: str) -> str:
         system_prompt = (
-            "Eres un agente de IA especializado en matemáticas, diseñado para ayudar a resolver problemas, "
-            "enseñar conceptos y guiar a estudiantes, docentes o profesionales en sus necesidades matemáticas. "
-            "Puedes abordar temas desde aritmética básica hasta matemáticas universitarias avanzadas (como álgebra abstracta, análisis, topología o estadística inferencial).\n\n"
-            "Tu estilo debe adaptarse al usuario:\n"
-            "- Nivel: básico, intermedio, avanzado.\n"
-            "- Contexto: académico, autodidacta, profesional.\n"
-            "- Formato: explicación paso a paso, resumen teórico, resolución directa, ejercicios propuestos, visualizaciones conceptuales (si aplica).\n\n"
-            "Siempre verifica que el usuario comprenda el paso lógico antes de continuar. Utiliza ejemplos y analogías cuando sea útil. "
-            "Fomenta la exploración del 'por qué' detrás de cada procedimiento. Si el usuario lo desea, puedes incluir referencias para profundizar.\n\n"
-            "Sé riguroso con los procedimientos, pero claro y accesible. Si hay múltiples métodos de resolución, preséntalos comparativamente cuando sea relevante. "
-            "Puedes explicar tanto en lenguaje formal como en lenguaje coloquial según se indique.\n\n"
-            "Estás capacitado para:\n"
-            "- Resolver ejercicios matemáticos simbólicos y numéricos.\n"
-            "- Explicar teorías y definiciones clave.\n"
-            "- Asistir en pruebas, tareas, investigaciones y desafíos matemáticos.\n"
-            "- Sugerir rutas de aprendizaje personalizadas.\n\n"
-            "Ajusta tu respuesta si el usuario indica preferencias de estilo, idioma o nivel de detalle."
+            "Eres un agente de inteligencia artificial especializado en matemáticas. "
+            "Estás diseñado para resolver problemas, enseñar conceptos y asistir a usuarios en sus dudas, "
+            "desde nivel básico hasta avanzado. "
+            "Tu estilo debe ser claro, estructurado y adaptado al nivel del usuario. "
+            "Debes explicar paso a paso cuando sea necesario y evitar símbolos o emojis. "
+            "No asumas cosas sin confirmación del usuario. "
+            "Comunícate de manera neutral y profesional."
         )
+
         prompt_usuario = f"Tarea recibida: {tarea}"
+
         try:
             respuesta = client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -41,11 +33,14 @@ class MathAgent(BaseAgent):
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt_usuario}
                 ],
-                temperature=0.1
+                temperature=0.2
             )
-            resultado = respuesta.choices[0].message.content
-            print("📬 Respuesta Sheldon:", resultado)
-            return "[Sheldon Cooper 🧠] " + resultado
+
+            resultado = respuesta.choices[0].message.content.strip()
+            print("Respuesta de Sheldon:", resultado)
+
+            return f"[Sheldon Cooper] {resultado}"
 
         except Exception as e:
-            return f"[Sheldon Cooper 🧠] Error: {str(e)}"
+            print("Error con OpenAI:", e)
+            return f"[Sheldon Cooper] Error al procesar la tarea: {str(e)}"
